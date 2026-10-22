@@ -70,7 +70,7 @@ El repositorio incluye [`render.yaml`](../render.yaml): un servicio web Node en 
 
 ## Probar el cliente de Pages contra un servidor local
 
-Sirve para comprobar el despliegue de Pages sin Render. Los navegadores permiten que una página https se conecte a `http://localhost`.
+Sirve para comprobar el despliegue de Pages sin Render, aunque **no funciona en todos los navegadores**.
 
 1. Arranca el servidor permitiendo el origen de Pages:
 
@@ -84,11 +84,19 @@ Sirve para comprobar el despliegue de Pages sin Render. Los navegadores permiten
    https://atapia9.github.io/mafia-online/narrador.html?server=http://localhost:3000
    ```
 
+Algunos navegadores piden permiso o bloquean que una página pública se conecte a `localhost`, para proteger la red local. Por ejemplo, el navegador integrado con el que se verificó el despliegue rechazó la conexión con `net::ERR_BLOCKED_BY_CLIENT`, y la petición nunca llegó al servidor.
+
+Si te pasa:
+
+- **Para probar el juego en local:** abre el cliente desde el propio servidor (`http://localhost:3000/narrador.html`). Los archivos son idénticos a los publicados.
+- **Para probar el cliente de Pages:** usa el servidor de Render.
+
 ## Solución de problemas
 
 | Síntoma | Causa probable |
 |---|---|
 | «No se puede conectar con el servidor» en Pages | `SERVER_URL` no está definida, el servidor está dormido (espera un minuto) o la URL es incorrecta. |
+| `net::ERR_BLOCKED_BY_CLIENT` al usar `?server=http://localhost:…` | El navegador bloquea que una página pública acceda a la red local. Usa el servidor de Render o abre el cliente desde `http://localhost:3000`. |
 | El handshake responde 403 | El origen de la página no está en `CORS_ORIGIN`. Revisa que sea `https://atapia9.github.io`, sin ruta. |
 | El servidor no arranca en Render | `CORS_ORIGIN` lleva una ruta, o `PORT` no es un número. |
 | Las salas desaparecen | El servidor se suspendió o se reinició; es la limitación de las salas en memoria. |
